@@ -35,8 +35,10 @@ ranges = bundle["ranges"]                   # {crop: {"low", "high", "level"}}
 rain_types = bundle["rain_types"]
 
 app = FastAPI(title="Telangana Crop Yield Predictor",
-              description="College project: Random Forest model trained on 1997-2019 data.")
-
+              description="College project: Random Forest model trained on 1997-2019 data. "
+                          "HOW TO TEST: open POST /predict, click 'Try it out', then 'Execute' "
+                          "(a sample input is pre-filled). Use GET /options to see valid "
+                          "districts, crops and seasons.")
 app.add_middleware(CORSMiddleware, allow_origins=["*"],     # lets a website call this API
                    allow_methods=["*"], allow_headers=["*"])
 
@@ -45,6 +47,14 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"],     # lets a website cal
 # What the farmer / frontend sends
 # ---------------------------------------------------------------
 class PredictRequest(BaseModel):
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {"district": "Warangal", "crop": "Rice", "season": "kharif",
+                 "rain_type": "normal", "area": 5}
+            ]
+        }
+    }
     district: str
     crop: str
     season: str
